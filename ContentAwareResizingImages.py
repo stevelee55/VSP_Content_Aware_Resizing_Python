@@ -52,7 +52,10 @@ for i, num_seams in enumerate(range(seams_per_iter, scale, seams_per_iter)):
 
     title = 'carved' + str(num_seams) + '.jpg'
 
-    cv2.imwrite(title, (carve * 255).astype(np.uint8))  # multiple to convert 0-1 to 0-255
+    if num_seams == 983:
+        #See if I could change it so that the window does not have black bar on the right side.
+        cv2.imwrite(title, (carve * 255).astype(np.uint8))  # multiple to convert 0-1 to 0-255
+
 # cv2.imshow(title, carve) #for visualization
 # cv2.waitKey(0)
 print("finished!")
