@@ -40,20 +40,24 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 for i, num_seams in enumerate(range(seams_per_iter, scale, seams_per_iter)):
+    #Where the actual carving happens.
     carve = transform.seam_carve(img, energy_map, direction, seams_per_iter)
+    #Where the carved value is removed or something and reset to 'img'.
     img = (carve * 255).astype(np.uint8)  # recursively recalculate images, save time, cleaner cuts
+    #Energy map being created.
     energy_map = create_energy_map(img)
 
     print("removing %d pixels" % (num_seams))
 
     # add padding on right for removed seams (for video in imageJ)
-    carve = cv2.copyMakeBorder(carve, top=0, bottom=0, left=0, right=num_seams, borderType=cv2.BORDER_CONSTANT,
-                               value=[0, 0, 0])
+    # This should be removed for the purpose of AWS Lambda. This way I can get the image file with the dimension that
+    # the carved image is instead of having a black boarder on the right side.
+    #carve = cv2.copyMakeBorder(carve, top=0, bottom=0, left=0, right=num_seams, borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
     title = 'carved' + str(num_seams) + '.jpg'
 
-    if num_seams == 983:
-        #See if I could change it so that the window does not have black bar on the right side.
+    if num_seams == 100:
+        # See if I could change it so that the window does not have black bar on the right side.
         cv2.imwrite(title, (carve * 255).astype(np.uint8))  # multiple to convert 0-1 to 0-255
 
 # cv2.imshow(title, carve) #for visualization
